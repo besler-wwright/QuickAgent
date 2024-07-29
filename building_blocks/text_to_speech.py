@@ -62,6 +62,7 @@ def send_tts_request(text):
     if not is_installed(player):
         raise ValueError(f"{player} not found, necessary to stream audio.")
     
+    # player_command = ["ffplay", "-autoexit", "-", "-nodisp"]
     player_command = ["ffplay", "-autoexit", "-", "-nodisp"]
     player_process = subprocess.Popen(
         player_command,
@@ -84,8 +85,8 @@ def send_tts_request(text):
                     ttfb = int((first_byte_time - start_time)*1000)  # Calculate the time to first byte
                     print(f"Time to First Byte (TTFB): {ttfb}ms")
                 # Write each chunk to the player's stdin immediately
-                player_process.stdin.write(chunk)  # type: ignore
-                player_process.stdin.flush()  # type: ignore
+                player_process.stdin.write(chunk)   # type: ignore
+                player_process.stdin.flush()   # type: ignore
 
     # Close the player's stdin and wait for the process to finish
     if player_process.stdin:

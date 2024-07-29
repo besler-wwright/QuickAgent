@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 import shutil
 import subprocess
 import requests
+
+
 import time
 import os
 
@@ -30,9 +32,11 @@ load_dotenv()
 
 class LanguageModelProcessor:
     def __init__(self):
-        self.llm = ChatGroq(temperature=0, model_name="mixtral-8x7b-32768", groq_api_key=os.getenv("GROQ_API_KEY"))
+        # self.llm = ChatGroq(temperature=0, name="mixtral-8x7b-32768", api_key=os.getenv("GROQ_API_KEY")) # type: ignore
+        self.llm = ChatGroq(temperature=0, name="llama-3.1-8b-instant", api_key=os.getenv("GROQ_API_KEY")) # type: ignore
         # self.llm = ChatOpenAI(temperature=0, model_name="gpt-4-0125-preview", openai_api_key=os.getenv("OPENAI_API_KEY"))
         # self.llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-0125", openai_api_key=os.getenv("OPENAI_API_KEY"))
+        # self.llm = ChatOpenAI(temperature=0, model_name="gpt-4o-mini", openai_api_key=os.getenv("OPENAI_API_KEY"))
 
         self.memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 
@@ -167,7 +171,7 @@ async def get_transcript(callback):
             encoding="linear16",
             channels=1,
             sample_rate=16000,
-            endpointing=300,
+            endpointing=100,
             smart_format=True,
         )
 
@@ -204,7 +208,7 @@ class ConversationManager:
             
             # Check for "goodbye" to exit the loop
             if "goodbye" in self.transcription_response.lower():
-                break
+                quit()
             
             llm_response = self.llm.process(self.transcription_response)
 
